@@ -1,0 +1,6 @@
+{
+  "name": "Mehfil AI - Celebration & Event Planner",
+  "description": "AI-powered celebration and event planner generating personalized timelines, budget breakdowns, curated vendor checklists, and theme concepts for memorable gatherings.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

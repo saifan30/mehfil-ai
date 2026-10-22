@@ -417,7 +417,7 @@ export const EventForm: React.FC<EventFormProps> = ({
                   <input
                     type="number"
                     min="100"
-                    step="500"
+                    step="any"
                     value={formData.budget}
                     onChange={(e) => setFormData({ ...formData, budget: Math.max(0, Number(e.target.value)) })}
                     placeholder="Enter total amount"

@@ -207,7 +207,7 @@ export const BudgetSection: React.FC<BudgetSectionProps> = ({
               <input
                 type="number"
                 min="100"
-                step="500"
+                step="any"
                 value={tempTotalInput}
                 onChange={(e) => setTempTotalInput(Number(e.target.value) || 0)}
                 className="w-full bg-stone-950 border border-stone-700 rounded px-2 py-1 text-xs font-mono text-amber-300"

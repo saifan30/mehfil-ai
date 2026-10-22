@@ -78,8 +78,9 @@ export const ZonesSection: React.FC<ZonesSectionProps> = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label className="block text-[11px] text-stone-300 mb-1">Zone Name</label>
+              <label htmlFor="new-zone-name" className="block text-[11px] text-stone-300 mb-1">Zone Name</label>
               <input
+                id="new-zone-name"
                 type="text"
                 placeholder="e.g. The Ghazal Baithak, Shahi Courtyard"
                 value={zoneName}
@@ -88,8 +89,9 @@ export const ZonesSection: React.FC<ZonesSectionProps> = ({
               />
             </div>
             <div>
-              <label className="block text-[11px] text-stone-300 mb-1">Seating Style</label>
+              <label htmlFor="new-zone-seating" className="block text-[11px] text-stone-300 mb-1">Seating Style</label>
               <input
+                id="new-zone-seating"
                 type="text"
                 placeholder="e.g. Low gaddi cushions, high cocktail tables"
                 value={seatingType}
@@ -98,8 +100,9 @@ export const ZonesSection: React.FC<ZonesSectionProps> = ({
               />
             </div>
             <div>
-              <label className="block text-[11px] text-stone-300 mb-1">Capacity (Guests)</label>
+              <label htmlFor="new-zone-capacity" className="block text-[11px] text-stone-300 mb-1">Capacity (Guests)</label>
               <input
+                id="new-zone-capacity"
                 type="number"
                 min="5"
                 max="2000"
@@ -112,8 +115,9 @@ export const ZonesSection: React.FC<ZonesSectionProps> = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-[11px] text-stone-300 mb-1">Primary Purpose</label>
+              <label htmlFor="new-zone-purpose" className="block text-[11px] text-stone-300 mb-1">Primary Purpose</label>
               <input
+                id="new-zone-purpose"
                 type="text"
                 placeholder="e.g. Live music listening and tea service"
                 value={purpose}
@@ -122,8 +126,9 @@ export const ZonesSection: React.FC<ZonesSectionProps> = ({
               />
             </div>
             <div>
-              <label className="block text-[11px] text-stone-300 mb-1">Ambiance & Lighting</label>
+              <label htmlFor="new-zone-ambiance" className="block text-[11px] text-stone-300 mb-1">Ambiance & Lighting</label>
               <input
+                id="new-zone-ambiance"
                 type="text"
                 placeholder="e.g. Amber lantern glow, brass urlis with floating petals"
                 value={ambianceDetails}

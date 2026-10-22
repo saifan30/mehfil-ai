@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { UtensilsCrossed, Plus, Trash2, Sparkles, Coffee, Wine } from 'lucide-react';
+import { UtensilsCrossed, Plus, Trash2, Sparkles } from 'lucide-react';
 import { MenuSection as MenuSectionType, MenuItem } from '../types/event';
 
 interface MenuSectionProps {
@@ -94,8 +94,9 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="sm:col-span-2">
-              <label className="block text-[11px] text-stone-300 mb-1">Dish Name</label>
+              <label htmlFor="new-dish-name" className="block text-[11px] text-stone-300 mb-1">Dish Name</label>
               <input
+                id="new-dish-name"
                 type="text"
                 placeholder="e.g. Kashmiri Zafrani Rogan Josh, Smoked Paneer Tikka"
                 value={newItemName}
@@ -104,8 +105,9 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
               />
             </div>
             <div>
-              <label className="block text-[11px] text-stone-300 mb-1">Dietary Tags</label>
+              <label htmlFor="new-dish-dietary" className="block text-[11px] text-stone-300 mb-1">Dietary Tags</label>
               <select
+                id="new-dish-dietary"
                 value={newItemDietary}
                 onChange={(e) => setNewItemDietary(e.target.value)}
                 className="w-full bg-stone-900 border border-stone-700 rounded-lg px-2 py-1.5 text-xs text-stone-100"
@@ -121,8 +123,9 @@ export const MenuSection: React.FC<MenuSectionProps> = ({
           </div>
 
           <div>
-            <label className="block text-[11px] text-stone-300 mb-1">Culinary Description</label>
+            <label htmlFor="new-dish-desc" className="block text-[11px] text-stone-300 mb-1">Culinary Description</label>
             <input
+              id="new-dish-desc"
               type="text"
               placeholder="e.g. Slow simmered with saffron, cardamom and brown shallots"
               value={newItemDesc}

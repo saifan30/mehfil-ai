@@ -2,13 +2,9 @@ import React, { useState } from 'react';
 import { 
   Coins, 
   TrendingUp, 
-  AlertTriangle, 
   Lightbulb, 
   Plus, 
   Trash2, 
-  Percent, 
-  CheckCircle,
-  Receipt,
   Users
 } from 'lucide-react';
 import { BudgetItem, EventPlan } from '../types/event';
@@ -315,8 +311,9 @@ export const BudgetSection: React.FC<BudgetSectionProps> = ({
           </h4>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label className="block text-[11px] text-stone-300 mb-1">Category Name</label>
+              <label htmlFor="new-category-name" className="block text-[11px] text-stone-300 mb-1">Category Name</label>
               <input
+                id="new-category-name"
                 type="text"
                 placeholder="e.g. Traditional Firework Display, Henna Artists"
                 value={newCategoryName}
@@ -325,8 +322,9 @@ export const BudgetSection: React.FC<BudgetSectionProps> = ({
               />
             </div>
             <div>
-              <label className="block text-[11px] text-stone-300 mb-1">Target Allocation (%)</label>
+              <label htmlFor="new-category-percent" className="block text-[11px] text-stone-300 mb-1">Target Allocation (%)</label>
               <input
+                id="new-category-percent"
                 type="number"
                 min="1"
                 max="50"
@@ -336,8 +334,9 @@ export const BudgetSection: React.FC<BudgetSectionProps> = ({
               />
             </div>
             <div>
-              <label className="block text-[11px] text-stone-300 mb-1">Notes / Scope</label>
+              <label htmlFor="new-category-notes" className="block text-[11px] text-stone-300 mb-1">Notes / Scope</label>
               <input
+                id="new-category-notes"
                 type="text"
                 placeholder="Details & scope..."
                 value={newCategoryNotes}

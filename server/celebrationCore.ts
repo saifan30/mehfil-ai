@@ -16,9 +16,30 @@ export const ai = new GoogleGenAI({
 const ipRequestCounts = new Map<string, { count: number; resetTime: number }>();
 const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
 const MAX_REQUESTS_PER_WINDOW = 40;
+const MAX_TRACKED_IPS = 5000;
+let lastCleanupTime = Date.now();
+const CLEANUP_INTERVAL_MS = 60 * 1000;
+
+function cleanupExpiredEntries(now: number): void {
+  for (const [ip, record] of ipRequestCounts.entries()) {
+    if (now > record.resetTime) {
+      ipRequestCounts.delete(ip);
+    }
+  }
+  if (ipRequestCounts.size > MAX_TRACKED_IPS) {
+    ipRequestCounts.clear();
+  }
+}
 
 export function applyRateLimit(clientIp: string): boolean {
   const now = Date.now();
+
+  // Lazy cleanup of expired entries without background timers (serverless and Express safe)
+  if (now - lastCleanupTime > CLEANUP_INTERVAL_MS || ipRequestCounts.size > MAX_TRACKED_IPS) {
+    cleanupExpiredEntries(now);
+    lastCleanupTime = now;
+  }
+
   const record = ipRequestCounts.get(clientIp);
 
   if (!record || now > record.resetTime) {
@@ -588,10 +609,15 @@ export async function handleAiSuggest(body: SuggestionRequest): Promise<{
     return { success: false, status: 400, error: 'Prompt is required for suggestion.' };
   }
 
+  const cleanPrompt = sanitizeText(prompt).slice(0, 1000);
+  if (!cleanPrompt) {
+    return { success: false, status: 400, error: 'A valid text prompt is required for suggestion.' };
+  }
+
   if (!apiKey) {
     return {
       success: true,
-      advice: `Based on your celebration plan for "${plan?.summary?.title || 'Event'}", here is a practical recommendation: "${prompt}". Make sure your key stakeholders and vendors sign off on any schedule changes at least 48 hours prior.`,
+      advice: `Based on your celebration plan for "${plan?.summary?.title || 'Event'}", here is a practical recommendation: "${cleanPrompt}". Make sure your key stakeholders and vendors sign off on any schedule changes at least 48 hours prior.`,
     };
   }
 
@@ -603,7 +629,7 @@ export async function handleAiSuggest(body: SuggestionRequest): Promise<{
 ${category ? `- Focus Category: ${category}` : ''}
 
 The organizer asks:
-"${prompt}"
+"${cleanPrompt}"
 
 Provide a concise, practical, expert recommendation (2-3 paragraphs) tailored specifically to this event. If helpful, provide bullet points of actionable next steps. Be warm, professional, and culturally perceptive.`;
 

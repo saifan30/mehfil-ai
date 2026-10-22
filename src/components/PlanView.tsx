@@ -8,10 +8,7 @@ import {
   Clock, 
   Printer, 
   Edit3, 
-  Copy, 
-  Check, 
   Bookmark, 
-  Layers, 
   UtensilsCrossed, 
   LayoutGrid, 
   Briefcase,
@@ -79,7 +76,6 @@ export const PlanView: React.FC<PlanViewProps> = ({
     onUpdatePlan({ ...plan, zones: updatedZones });
   };
 
-  const completedTimelineCount = plan.timeline.filter((t) => t.isCompleted).length;
   const bookedVendorsCount = plan.vendorChecklist.filter(
     (v) => v.status === 'Contract Signed' || v.status === 'Deposit Paid' || v.status === 'Fully Paid'
   ).length;

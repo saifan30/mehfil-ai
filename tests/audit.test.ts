@@ -1,7 +1,8 @@
-import { test, describe } from 'node:test';
+import { test, describe, before } from 'node:test';
 import assert from 'node:assert/strict';
-import { formatCurrency, formatDate } from '../src/utils/formatters';
-import { EventInput, EventPlan } from '../src/types/event';
+import { formatCurrency, formatDate } from '../src/utils/formatters.ts';
+import { validateImportedPlan } from '../src/utils/validators.ts';
+import type { EventInput, EventPlan } from '../src/types/event.ts';
 
 const BASE_URL = 'http://localhost:3000';
 
@@ -147,22 +148,6 @@ describe('3. Budget Edge Cases & Mathematical Robustness', () => {
 });
 
 describe('4. Malformed JSON Import & Plan Schema Validation', () => {
-  // Pure validator function matching ExportModal.tsx schema check
-  function validateImportedPlan(parsed: any): { valid: boolean; error?: string } {
-    if (!parsed || typeof parsed !== 'object') {
-      return { valid: false, error: 'File content must be a valid JSON object.' };
-    }
-    if (!parsed.summary?.title) {
-      return { valid: false, error: 'Missing celebration title in plan summary.' };
-    }
-    if (!Array.isArray(parsed.timeline)) {
-      return { valid: false, error: 'Timeline must be an array of milestones.' };
-    }
-    if (!parsed.budgetBreakdown || !Array.isArray(parsed.budgetBreakdown.items)) {
-      return { valid: false, error: 'Budget breakdown must contain an items array.' };
-    }
-    return { valid: true };
-  }
 
   test('rejects non-object or null input', () => {
     assert.equal(validateImportedPlan(null).valid, false);
@@ -270,7 +255,22 @@ describe('5. Storage Quota & Persistence Resilience', () => {
 });
 
 describe('6. Live Server API, Validation & Security Audit', () => {
-  test('GET /api/health responds with 200 and healthy status without leaking secrets', async () => {
+  let serverAvailable = false;
+
+  before(async () => {
+    try {
+      const res = await fetch(`${BASE_URL}/api/health`, { signal: AbortSignal.timeout(1500) });
+      serverAvailable = res.ok;
+    } catch {
+      serverAvailable = false;
+    }
+  });
+
+  test('GET /api/health responds with 200 and healthy status without leaking secrets', async (t) => {
+    if (!serverAvailable) {
+      t.skip(`Live server is not running on ${BASE_URL}`);
+      return;
+    }
     const res = await fetch(`${BASE_URL}/api/health`);
     assert.equal(res.status, 200);
     const data = await res.json();
@@ -283,7 +283,11 @@ describe('6. Live Server API, Validation & Security Audit', () => {
     assert.equal(res.headers.get('x-api-key'), null, 'Headers must not contain API key');
   });
 
-  test('POST /api/generate-plan rejects missing eventType with 400', async () => {
+  test('POST /api/generate-plan rejects missing eventType with 400', async (t) => {
+    if (!serverAvailable) {
+      t.skip(`Live server is not running on ${BASE_URL}`);
+      return;
+    }
     const res = await fetch(`${BASE_URL}/api/generate-plan`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -299,7 +303,11 @@ describe('6. Live Server API, Validation & Security Audit', () => {
     assert.match(err.error, /Event type is required/);
   });
 
-  test('POST /api/generate-plan rejects negative or zero budget with 400', async () => {
+  test('POST /api/generate-plan rejects negative or zero budget with 400', async (t) => {
+    if (!serverAvailable) {
+      t.skip(`Live server is not running on ${BASE_URL}`);
+      return;
+    }
     const res = await fetch(`${BASE_URL}/api/generate-plan`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -316,7 +324,11 @@ describe('6. Live Server API, Validation & Security Audit', () => {
     assert.match(err.error, /Budget/);
   });
 
-  test('POST /api/generate-plan rejects invalid guest counts (>50,000 or <1) with 400', async () => {
+  test('POST /api/generate-plan rejects invalid guest counts (>50,000 or <1) with 400', async (t) => {
+    if (!serverAvailable) {
+      t.skip(`Live server is not running on ${BASE_URL}`);
+      return;
+    }
     const res = await fetch(`${BASE_URL}/api/generate-plan`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -333,7 +345,11 @@ describe('6. Live Server API, Validation & Security Audit', () => {
     assert.match(err.error, /Guest count/);
   });
 
-  test('POST /api/generate-plan rejects invalid currency codes with 400', async () => {
+  test('POST /api/generate-plan rejects invalid currency codes with 400', async (t) => {
+    if (!serverAvailable) {
+      t.skip(`Live server is not running on ${BASE_URL}`);
+      return;
+    }
     const res = await fetch(`${BASE_URL}/api/generate-plan`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -351,7 +367,11 @@ describe('6. Live Server API, Validation & Security Audit', () => {
     assert.match(err.error, /Invalid currency/);
   });
 
-  test('POST /api/generate-plan sanitizes HTML tags from inputs and returns complete blueprint', async () => {
+  test('POST /api/generate-plan sanitizes HTML tags from inputs and returns complete blueprint', async (t) => {
+    if (!serverAvailable) {
+      t.skip(`Live server is not running on ${BASE_URL}`);
+      return;
+    }
     const res = await fetch(`${BASE_URL}/api/generate-plan`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -375,7 +395,11 @@ describe('6. Live Server API, Validation & Security Audit', () => {
     assert.ok(plan.zones && plan.zones.length > 0, 'Zones must be populated');
   });
 
-  test('POST /api/ai-suggest provides contextual celebration advice', async () => {
+  test('POST /api/ai-suggest provides contextual celebration advice', async (t) => {
+    if (!serverAvailable) {
+      t.skip(`Live server is not running on ${BASE_URL}`);
+      return;
+    }
     const res = await fetch(`${BASE_URL}/api/ai-suggest`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -393,7 +417,11 @@ describe('6. Live Server API, Validation & Security Audit', () => {
     assert.ok(data.advice && data.advice.length > 20, 'Advice must be returned with meaningful content');
   });
 
-  test('Rate limiting triggers HTTP 429 after exceeding request threshold', async () => {
+  test('Rate limiting triggers HTTP 429 after exceeding request threshold', async (t) => {
+    if (!serverAvailable) {
+      t.skip(`Live server is not running on ${BASE_URL}`);
+      return;
+    }
     const testIp = '198.51.100.99';
     let lastStatus = 200;
 

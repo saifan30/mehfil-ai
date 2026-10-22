@@ -17,17 +17,24 @@ export const SampleScenariosModal: React.FC<SampleScenariosModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/80 backdrop-blur-md no-print">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="sample-scenarios-title"
+      onKeyDown={(e) => e.key === 'Escape' && onClose()}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/80 backdrop-blur-md no-print"
+    >
       <div className="w-full max-w-3xl bg-stone-900 border border-stone-800 rounded-2xl p-6 shadow-2xl relative space-y-4 max-h-[88vh] flex flex-col animate-in fade-in duration-200">
         <div className="flex items-center justify-between pb-3 border-b border-stone-800">
           <div className="flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-amber-500" />
-            <h3 className="font-serif text-lg font-bold text-stone-100">
+            <h3 id="sample-scenarios-title" className="font-serif text-lg font-bold text-stone-100">
               Curated Celebration Inspiration Scenarios
             </h3>
           </div>
           <button
             onClick={onClose}
+            aria-label="Close sample scenarios modal"
             className="text-stone-400 hover:text-stone-200 p-1"
           >
             <X className="w-5 h-5" />

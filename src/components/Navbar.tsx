@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Calendar, PlusCircle, Printer, FolderOpen, Flame } from 'lucide-react';
+import { Sparkles, PlusCircle, Printer, FolderOpen, Flame } from 'lucide-react';
 import { EventPlan } from '../types/event';
 
 interface NavbarProps {

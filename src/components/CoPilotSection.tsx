@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, Send, Copy, Check, MessageSquare, Lightbulb, Compass, ShieldAlert } from 'lucide-react';
+import { Sparkles, Send, Copy, Check, Lightbulb, Compass, ShieldAlert } from 'lucide-react';
 import { EventPlan } from '../types/event';
 
 interface CoPilotSectionProps {
@@ -101,11 +101,12 @@ export const CoPilotSection: React.FC<CoPilotSectionProps> = ({ plan }) => {
 
       {/* Input box */}
       <div className="p-4 rounded-2xl border border-stone-800 bg-stone-900/80 backdrop-blur-sm space-y-3">
-        <label className="block text-xs font-medium text-stone-300">
+        <label htmlFor="copilot-prompt-input" className="block text-xs font-medium text-stone-300">
           Ask Custom Question About This Celebration
         </label>
         <div className="flex gap-2">
           <textarea
+            id="copilot-prompt-input"
             rows={2}
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}

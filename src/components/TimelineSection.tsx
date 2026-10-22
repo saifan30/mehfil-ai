@@ -2,13 +2,10 @@ import React, { useState } from 'react';
 import { 
   Clock, 
   Plus, 
-  CheckCircle2, 
-  Circle, 
   Edit2, 
   Trash2, 
   Volume2, 
   UserCheck, 
-  Filter, 
   Check, 
   X,
   Sparkles
@@ -220,8 +217,9 @@ export const TimelineSection: React.FC<TimelineSectionProps> = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label className="block text-[11px] text-stone-300 mb-1">Time</label>
+              <label htmlFor="new-timeline-time" className="block text-[11px] text-stone-300 mb-1">Time</label>
               <input
+                id="new-timeline-time"
                 type="text"
                 placeholder="e.g. 19:30"
                 value={itemTime}
@@ -230,8 +228,9 @@ export const TimelineSection: React.FC<TimelineSectionProps> = ({
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="block text-[11px] text-stone-300 mb-1">Milestone Title</label>
+              <label htmlFor="new-timeline-title" className="block text-[11px] text-stone-300 mb-1">Milestone Title</label>
               <input
+                id="new-timeline-title"
                 type="text"
                 placeholder="e.g. Grand Entrance of Couple / Keynote Speech"
                 value={itemTitle}
@@ -240,8 +239,9 @@ export const TimelineSection: React.FC<TimelineSectionProps> = ({
               />
             </div>
             <div>
-              <label className="block text-[11px] text-stone-300 mb-1">Celebration Phase</label>
+              <label htmlFor="new-timeline-phase" className="block text-[11px] text-stone-300 mb-1">Celebration Phase</label>
               <select
+                id="new-timeline-phase"
                 value={itemPhase}
                 onChange={(e) => setItemPhase(e.target.value as TimelinePhase)}
                 className="w-full bg-stone-900 border border-stone-700 rounded-lg px-2.5 py-1.5 text-xs text-stone-100"
@@ -252,8 +252,9 @@ export const TimelineSection: React.FC<TimelineSectionProps> = ({
               </select>
             </div>
             <div>
-              <label className="block text-[11px] text-stone-300 mb-1">Lead Responsible</label>
+              <label htmlFor="new-timeline-lead" className="block text-[11px] text-stone-300 mb-1">Lead Responsible</label>
               <input
+                id="new-timeline-lead"
                 type="text"
                 placeholder="e.g. Emcee / Hospitality Captain"
                 value={itemLeadRole}
@@ -262,8 +263,9 @@ export const TimelineSection: React.FC<TimelineSectionProps> = ({
               />
             </div>
             <div>
-              <label className="block text-[11px] text-stone-300 mb-1">Audio / Lighting Cue</label>
+              <label htmlFor="new-timeline-cue" className="block text-[11px] text-stone-300 mb-1">Audio / Lighting Cue</label>
               <input
+                id="new-timeline-cue"
                 type="text"
                 placeholder="e.g. Warm amber spotlight, live shehnai crescendo"
                 value={itemCue}
@@ -274,8 +276,9 @@ export const TimelineSection: React.FC<TimelineSectionProps> = ({
           </div>
 
           <div>
-            <label className="block text-[11px] text-stone-300 mb-1">Description & Operational Notes</label>
+            <label htmlFor="new-timeline-desc" className="block text-[11px] text-stone-300 mb-1">Description & Operational Notes</label>
             <input
+              id="new-timeline-desc"
               type="text"
               placeholder="What happens during this moment? Any specific coordination notes?"
               value={itemDescription}

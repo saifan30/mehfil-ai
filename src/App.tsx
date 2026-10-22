@@ -6,8 +6,8 @@ import { ExportModal } from './components/ExportModal';
 import { SavedPlansModal } from './components/SavedPlansModal';
 import { SampleScenariosModal } from './components/SampleScenariosModal';
 import { EventInput, EventPlan } from './types/event';
-import { SAMPLE_SCENARIOS, SampleScenario } from './data/sampleScenarios';
-import { Sparkles, AlertCircle, CheckCircle, Flame } from 'lucide-react';
+import type { SampleScenario } from './data/sampleScenarios';
+import { AlertCircle, CheckCircle, Flame } from 'lucide-react';
 
 const STORAGE_KEY = 'mehfil_ai_saved_plans_v1';
 const LAST_PLAN_KEY = 'mehfil_ai_last_active_plan';

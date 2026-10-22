@@ -3,6 +3,9 @@ import { Printer, Download, Upload, Copy, Check, X, FileText, Share2 } from 'luc
 import { EventPlan } from '../types/event';
 import { formatCurrency, formatDate } from '../utils/formatters';
 
+import { validateImportedPlan } from '../utils/validators';
+export { validateImportedPlan };
+
 interface ExportModalProps {
   plan: EventPlan;
   isOpen: boolean;
@@ -92,15 +95,9 @@ ${plan.vendorChecklist.map((v) => `- **${v.name}** (${v.category} - ${v.role})\n
     reader.onload = (event) => {
       try {
         const parsed = JSON.parse(event.target?.result as string);
-        if (
-          !parsed ||
-          typeof parsed !== 'object' ||
-          !parsed.summary?.title ||
-          !Array.isArray(parsed.timeline) ||
-          !parsed.budgetBreakdown ||
-          !Array.isArray(parsed.budgetBreakdown.items)
-        ) {
-          throw new Error('Invalid Mehfil AI plan JSON format. Required sections (summary, timeline, budget) missing.');
+        const validation = validateImportedPlan(parsed);
+        if (!validation.valid) {
+          throw new Error(validation.error || 'Invalid Mehfil AI plan JSON format.');
         }
         onImportPlan(parsed as EventPlan);
         onClose();
@@ -116,17 +113,24 @@ ${plan.vendorChecklist.map((v) => `- **${v.name}** (${v.category} - ${v.role})\n
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/80 backdrop-blur-md no-print">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="export-modal-title"
+      onKeyDown={(e) => e.key === 'Escape' && onClose()}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/80 backdrop-blur-md no-print"
+    >
       <div className="w-full max-w-lg bg-stone-900 border border-stone-800 rounded-2xl p-6 shadow-2xl relative space-y-5 animate-in fade-in duration-200">
         <div className="flex items-center justify-between pb-3 border-b border-stone-800">
           <div className="flex items-center gap-2">
             <Share2 className="w-4 h-4 text-amber-400" />
-            <h3 className="font-serif text-lg font-bold text-stone-100">
+            <h3 id="export-modal-title" className="font-serif text-lg font-bold text-stone-100">
               Export & Share Event Blueprint
             </h3>
           </div>
           <button
             onClick={onClose}
+            aria-label="Close export modal"
             className="text-stone-400 hover:text-stone-200 p-1"
           >
             <X className="w-5 h-5" />

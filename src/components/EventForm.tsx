@@ -10,11 +10,9 @@ import {
   Palette, 
   Building2, 
   Clock, 
-  Info, 
   Flame, 
   ArrowRight,
-  CheckCircle2,
-  AlertCircle
+  CheckCircle2
 } from 'lucide-react';
 import { EventInput } from '../types/event';
 import { SAMPLE_SCENARIOS, SampleScenario } from '../data/sampleScenarios';
@@ -394,7 +392,7 @@ export const EventForm: React.FC<EventFormProps> = ({
 
               {/* Budget & Currency */}
               <div>
-                <label className="block text-xs font-medium text-stone-300 mb-1.5 flex items-center justify-between">
+                <label htmlFor="totalBudget" className="block text-xs font-medium text-stone-300 mb-1.5 flex items-center justify-between">
                   <span>Total Planned Budget <span className="text-rose-400">*</span></span>
                   {formData.budget > 0 && formData.guestCount > 0 && (
                     <span className="text-[11px] text-stone-400 font-mono">
@@ -404,6 +402,8 @@ export const EventForm: React.FC<EventFormProps> = ({
                 </label>
                 <div className="flex gap-2">
                   <select
+                    id="budgetCurrency"
+                    aria-label="Budget Currency"
                     value={formData.currency}
                     onChange={(e) => setFormData({ ...formData, currency: e.target.value as EventInput['currency'] })}
                     className="w-28 bg-stone-950/80 border border-stone-700/80 rounded-xl px-2 py-2.5 text-xs text-stone-100 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none font-mono"
@@ -415,6 +415,7 @@ export const EventForm: React.FC<EventFormProps> = ({
                     ))}
                   </select>
                   <input
+                    id="totalBudget"
                     type="number"
                     min="100"
                     step="any"

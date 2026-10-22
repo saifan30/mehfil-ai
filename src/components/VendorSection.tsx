@@ -2,12 +2,8 @@ import React, { useState } from 'react';
 import { 
   Briefcase, 
   Plus, 
-  CheckCircle2, 
   Clock, 
-  AlertCircle, 
-  DollarSign, 
   Trash2, 
-  ChevronDown, 
   Filter,
   CheckSquare,
   Square,
@@ -235,8 +231,9 @@ export const VendorSection: React.FC<VendorSectionProps> = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label className="block text-[11px] text-stone-300 mb-1">Vendor / Company Name</label>
+              <label htmlFor="new-vendor-name" className="block text-[11px] text-stone-300 mb-1">Vendor / Company Name</label>
               <input
+                id="new-vendor-name"
                 type="text"
                 placeholder="e.g. Royal Mehfil Soundworks"
                 value={newName}
@@ -245,8 +242,9 @@ export const VendorSection: React.FC<VendorSectionProps> = ({
               />
             </div>
             <div>
-              <label className="block text-[11px] text-stone-300 mb-1">Category</label>
+              <label htmlFor="new-vendor-category" className="block text-[11px] text-stone-300 mb-1">Category</label>
               <input
+                id="new-vendor-category"
                 type="text"
                 placeholder="e.g. Catering, Sound & AV, Decor, Photography"
                 value={newCategory}
@@ -255,8 +253,9 @@ export const VendorSection: React.FC<VendorSectionProps> = ({
               />
             </div>
             <div>
-              <label className="block text-[11px] text-stone-300 mb-1">Specific Role</label>
+              <label htmlFor="new-vendor-role" className="block text-[11px] text-stone-300 mb-1">Specific Role</label>
               <input
+                id="new-vendor-role"
                 type="text"
                 placeholder="e.g. Lead Sitar & Vocalist, Master Halwai"
                 value={newRole}
@@ -268,8 +267,9 @@ export const VendorSection: React.FC<VendorSectionProps> = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
             <div>
-              <label className="block text-[11px] text-stone-300 mb-1">Procurement Status</label>
+              <label htmlFor="new-vendor-status" className="block text-[11px] text-stone-300 mb-1">Procurement Status</label>
               <select
+                id="new-vendor-status"
                 value={newStatus}
                 onChange={(e) => setNewStatus(e.target.value as VendorStatus)}
                 className="w-full bg-stone-900 border border-stone-700 rounded-lg px-2 py-1.5 text-xs text-stone-100"
@@ -280,8 +280,9 @@ export const VendorSection: React.FC<VendorSectionProps> = ({
               </select>
             </div>
             <div>
-              <label className="block text-[11px] text-stone-300 mb-1">Priority</label>
+              <label htmlFor="new-vendor-priority" className="block text-[11px] text-stone-300 mb-1">Priority</label>
               <select
+                id="new-vendor-priority"
                 value={newPriority}
                 onChange={(e) => setNewPriority(e.target.value as PriorityLevel)}
                 className="w-full bg-stone-900 border border-stone-700 rounded-lg px-2 py-1.5 text-xs text-stone-100"
@@ -292,8 +293,9 @@ export const VendorSection: React.FC<VendorSectionProps> = ({
               </select>
             </div>
             <div>
-              <label className="block text-[11px] text-stone-300 mb-1">Estimated Cost ({currency})</label>
+              <label htmlFor="new-vendor-cost" className="block text-[11px] text-stone-300 mb-1">Estimated Cost ({currency})</label>
               <input
+                id="new-vendor-cost"
                 type="number"
                 value={newEstimatedCost}
                 onChange={(e) => setNewEstimatedCost(Number(e.target.value) || 0)}
@@ -301,8 +303,9 @@ export const VendorSection: React.FC<VendorSectionProps> = ({
               />
             </div>
             <div>
-              <label className="block text-[11px] text-stone-300 mb-1">Booking Deadline</label>
+              <label htmlFor="new-vendor-deadline" className="block text-[11px] text-stone-300 mb-1">Booking Deadline</label>
               <input
+                id="new-vendor-deadline"
                 type="text"
                 placeholder="e.g. 4 weeks prior"
                 value={newDeadline}
@@ -313,8 +316,9 @@ export const VendorSection: React.FC<VendorSectionProps> = ({
           </div>
 
           <div>
-            <label className="block text-[11px] text-stone-300 mb-1">Deliverables (one per line)</label>
+            <label htmlFor="new-vendor-deliverables" className="block text-[11px] text-stone-300 mb-1">Deliverables (one per line)</label>
             <textarea
+              id="new-vendor-deliverables"
               rows={2}
               placeholder="e.g. Line array speaker set&#10;Wireless microphones&#10;On-site sound technician"
               value={newDeliverablesText}

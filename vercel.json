@@ -8,24 +8,16 @@
     "api/*.ts": {
       "maxDuration": 60,
       "memory": 1024
+    },
+    "api/*.js": {
+      "maxDuration": 60,
+      "memory": 1024
     }
   },
   "rewrites": [
     {
-      "source": "/api/generate-plan",
-      "destination": "/api/generate-plan"
-    },
-    {
-      "source": "/api/ai-suggest",
-      "destination": "/api/ai-suggest"
-    },
-    {
-      "source": "/api/health",
-      "destination": "/api/health"
-    },
-    {
       "source": "/api/(.*)",
-      "destination": "/api/index"
+      "destination": "/api/$1"
     },
     {
       "source": "/(.*)",

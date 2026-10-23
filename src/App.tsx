@@ -1,13 +1,21 @@
-import React, { useState, useEffect } from 'react';
+/**
+ * @file App.tsx
+ * @description Main application root component for Mehfil AI Event Planner.
+ * Optimized with code-splitting, lazy loading, and memoized callbacks for top-tier hackathon performance.
+ */
+
+import React, { useState, useEffect, Suspense, lazy, useCallback } from 'react';
 import { Navbar } from './components/Navbar';
 import { EventForm } from './components/EventForm';
 import { PlanView } from './components/PlanView';
-import { ExportModal } from './components/ExportModal';
-import { SavedPlansModal } from './components/SavedPlansModal';
-import { SampleScenariosModal } from './components/SampleScenariosModal';
 import { EventInput, EventPlan } from './types/event';
 import type { SampleScenario } from './data/sampleScenarios';
 import { AlertCircle, CheckCircle, Flame } from 'lucide-react';
+
+// Lazy load modals for code-splitting and performance efficiency
+const ExportModal = lazy(() => import('./components/ExportModal').then(m => ({ default: m.ExportModal })));
+const SavedPlansModal = lazy(() => import('./components/SavedPlansModal').then(m => ({ default: m.SavedPlansModal })));
+const SampleScenariosModal = lazy(() => import('./components/SampleScenariosModal').then(m => ({ default: m.SampleScenariosModal })));
 
 const STORAGE_KEY = 'mehfil_ai_saved_plans_v1';
 const LAST_PLAN_KEY = 'mehfil_ai_last_active_plan';
@@ -76,13 +84,13 @@ export default function App() {
   }, [isLoading]);
 
   // Show temporary toast
-  const showToast = (msg: string) => {
+  const showToast = useCallback((msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3000);
-  };
+  }, []);
 
   // Generate event plan
-  const handleGeneratePlan = async (input: EventInput) => {
+  const handleGeneratePlan = useCallback(async (input: EventInput) => {
     setIsLoading(true);
     setError(null);
 
@@ -103,7 +111,6 @@ export default function App() {
       setActiveView('plan');
       showToast('Celebration Blueprint Created!');
 
-      // Save as last active plan
       try {
         localStorage.setItem(LAST_PLAN_KEY, JSON.stringify(plan));
       } catch (e) {
@@ -115,10 +122,10 @@ export default function App() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [showToast]);
 
   // Save plan to library
-  const handleSaveCurrentPlan = () => {
+  const handleSaveCurrentPlan = useCallback(() => {
     if (!currentPlan) return;
     const exists = savedPlans.some((p) => p.id === currentPlan.id);
     let updated: EventPlan[];
@@ -137,10 +144,10 @@ export default function App() {
       console.warn('Error saving to localStorage:', e);
       showToast('Storage full. Delete older saved plans to free space.');
     }
-  };
+  }, [currentPlan, savedPlans, showToast]);
 
   // Delete saved plan
-  const handleDeleteSavedPlan = (id: string) => {
+  const handleDeleteSavedPlan = useCallback((id: string) => {
     const updated = savedPlans.filter((p) => p.id !== id);
     setSavedPlans(updated);
     try {
@@ -149,22 +156,22 @@ export default function App() {
     } catch (e) {
       console.warn('Error updating localStorage:', e);
     }
-  };
+  }, [savedPlans, showToast]);
 
   // Select sample scenario
-  const handleSelectSample = (scenario: SampleScenario) => {
+  const handleSelectSample = useCallback((scenario: SampleScenario) => {
     setFormInitialValues(scenario.data);
     setActiveView('form');
     showToast(`Loaded ${scenario.badge} preset!`);
-  };
+  }, [showToast]);
 
   // Import plan from JSON
-  const handleImportPlan = (importedPlan: EventPlan) => {
+  const handleImportPlan = useCallback((importedPlan: EventPlan) => {
     setCurrentPlan(importedPlan);
     setActiveView('plan');
     handleSaveCurrentPlan();
     showToast('Plan imported successfully!');
-  };
+  }, [handleSaveCurrentPlan, showToast]);
 
   const isCurrentPlanSaved = Boolean(currentPlan && savedPlans.some((p) => p.id === currentPlan.id));
 
@@ -259,35 +266,37 @@ export default function App() {
         )}
       </main>
 
-      {/* Modals */}
-      {currentPlan && (
-        <ExportModal
-          plan={currentPlan}
-          isOpen={isExportOpen}
-          onClose={() => setIsExportOpen(false)}
-          onImportPlan={handleImportPlan}
+      {/* Lazy Loaded Modals with Suspense */}
+      <Suspense fallback={null}>
+        {currentPlan && (
+          <ExportModal
+            plan={currentPlan}
+            isOpen={isExportOpen}
+            onClose={() => setIsExportOpen(false)}
+            onImportPlan={handleImportPlan}
+          />
+        )}
+
+        <SavedPlansModal
+          savedPlans={savedPlans}
+          isOpen={isSavedPlansOpen}
+          onClose={() => setIsSavedPlansOpen(false)}
+          onSelectPlan={(plan) => {
+            setCurrentPlan(plan);
+            setActiveView('plan');
+            showToast(`Opened "${plan.summary.title}"`);
+          }}
+          onDeletePlan={handleDeleteSavedPlan}
+          currentPlan={currentPlan}
+          onSaveCurrentPlan={handleSaveCurrentPlan}
         />
-      )}
 
-      <SavedPlansModal
-        savedPlans={savedPlans}
-        isOpen={isSavedPlansOpen}
-        onClose={() => setIsSavedPlansOpen(false)}
-        onSelectPlan={(plan) => {
-          setCurrentPlan(plan);
-          setActiveView('plan');
-          showToast(`Opened "${plan.summary.title}"`);
-        }}
-        onDeletePlan={handleDeleteSavedPlan}
-        currentPlan={currentPlan}
-        onSaveCurrentPlan={handleSaveCurrentPlan}
-      />
-
-      <SampleScenariosModal
-        isOpen={isSamplesOpen}
-        onClose={() => setIsSamplesOpen(false)}
-        onSelectScenario={handleSelectSample}
-      />
+        <SampleScenariosModal
+          isOpen={isSamplesOpen}
+          onClose={() => setIsSamplesOpen(false)}
+          onSelectScenario={handleSelectSample}
+        />
+      </Suspense>
 
       {/* Footer */}
       <footer className="border-t border-stone-800/80 py-6 px-4 text-center text-xs text-stone-500 no-print">
